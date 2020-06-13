@@ -1,0 +1,19 @@
+package com.example.demo;
+
+public class MethodOverriding1 {
+	
+	public void m1(boolean a) {
+		System.out.println("Boolean Method");
+	}
+	
+	public void m1(int a) {
+		System.out.println("int Methood");
+	}
+	
+	public static void main(String[] args) {
+		MethodOverriding1 m = new MethodOverriding1();
+		m.m1(10);
+	}
+
+
+}

@@ -1,0 +1,126 @@
+package com.example.demo.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.entity.Booking;
+import com.example.demo.entity.User;
+import com.example.demo.repository.LocationRepository;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.service.Cab;
+import com.example.demo.service.FindCabServices;
+
+/* Request Booking:- http://localhost:8080/api/v1/save_location
+ * Booking History:- http://localhost:8080/api/v1/history/1
+ * Nearest Cab:- http://localhost:8080/api/v1/karvenagar
+*/
+
+@RestController
+@RequestMapping("api/v1")
+public class LocationController {
+	
+	@Autowired
+	LocationRepository locationRepository;
+	
+	@Autowired
+	UserRepository userRepository;
+	
+	@Autowired
+	FindCabServices findCabServices;
+		
+	@PostMapping("/save_location")
+	public ResponseEntity<?> getLocationForRequestBooking(@RequestBody Booking booking) {
+		
+		List<Booking>bookingList=new ArrayList<Booking>();
+		
+		User user=userRepository.findByUserId(1);
+		
+		booking.setUser(user);
+		
+		bookingList.add(booking);
+		
+		user.setBookings(bookingList);
+		
+		userRepository.save(user);
+		
+		return new ResponseEntity<String>("Booking successful!",HttpStatus.CREATED);
+		
+	}
+	
+	@GetMapping("history/{userId}")
+	public List<Booking> getHistoryOfUser(@PathVariable Integer userId) {
+		
+		User user=userRepository.findByUserId(userId);
+		
+		List<Booking> bookings=user.getBookings();
+
+		return bookings;
+	}
+	
+/*	
+	@GetMapping("/{picklocation}")
+	public List<Cab> getPickupLocation(@PathVariable String picklocation) {
+		
+		System.out.println("Location=========== " + picklocation);
+		
+		return findCabServices.getCab(picklocation);	
+	}
+*/
+	
+
+	@GetMapping("/{picklocation}")
+	public ResponseEntity<List<Cab>> getPickupLoc(@PathVariable String picklocation) {
+		return new ResponseEntity<List<Cab>>(findCabServices.getCab(picklocation), HttpStatus.OK);
+	}
+
+	
+
+/*	@PostMapping("/save_location")
+	public ResponseEntity<?> getLocationForRequestBooking(@RequestBody Booking location) {
+		System.out.println("Booking============ " + location);
+		
+		System.out.println("=================================="+location.getUser());
+		
+		
+		Booking b = locationRepository.save(location);
+		b.setUser(location.getUser());
+		return new ResponseEntity<Booking>(b, HttpStatus.CREATED);
+	}*/
+			
+	
+/*	@PostMapping("/{pick_location}/{drop_location}")
+	public ResponseEntity<?> getSourceAndDestinationLocation( 
+									@PathVariable String pick_location, @PathVariable String drop_location) {
+		
+		// http://localhost:8080/api/v1/KarveNagar/Warje
+		
+		System.out.println("pickLocation============ "+ pick_location);
+		System.out.println("dropLocation============ "+ drop_location);
+		
+		return new ResponseEntity<Location>(HttpStatus.OK);
+		
+	}
+*/
+	
+	/*
+	@GetMapping("/{user_id}")
+	public Optional<Location> getHistoryOfUserBooking(@PathVariable Integer user_id) {
+	// http://localhost:8080/api/v1/1
+		System.out.println("user_id=========="+ user_id);
+		return locationRepository.findById(user_id);
+	}	
+*/	
+
+
+}

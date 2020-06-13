@@ -1,0 +1,49 @@
+package com.example.demo.entity;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+@Entity
+public class Booking {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	Integer B_id;
+	String pickLocation;
+	String dropLocation;
+	
+	
+	public Integer getB_id() {
+		return B_id;
+	}
+
+	public void setB_id(Integer b_id) {
+		B_id = b_id;
+	}
+
+	public String getPickLocation() {
+		return pickLocation;
+	}
+	
+	public void setPickLocation(String pickLocation) {
+		this.pickLocation = pickLocation;
+	}
+	
+	public String getDropLocation() {
+		return dropLocation;
+	}
+	
+	public void setDropLocation(String dropLocation) {
+		this.dropLocation = dropLocation;
+	}
+
+	@Override
+	public String toString() {
+		return "Location [id=" + B_id + ", pickLocation=" + pickLocation + ", dropLocation=" + dropLocation + "]";
+	}
+}
